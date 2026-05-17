@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { 
   getProducts, 
   saveDraft, 
@@ -17,7 +15,6 @@ import ConfirmModal from './ConfirmModal';
 export default function InvoiceForm() {
   const [products, setProducts] = useState([]);
   const [showProductManager, setShowProductManager] = useState(false);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [showConfirmNew, setShowConfirmNew] = useState(false);
   const [showPreviewScreen, setShowPreviewScreen] = useState(false);
   
@@ -107,30 +104,6 @@ export default function InvoiceForm() {
     setInvoiceData({ ...invoiceData, items: newItems });
   };
 
-  const handleGeneratePdf = async () => {
-    setIsGeneratingPdf(true);
-    try {
-      const element = printRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`KS-Agro-Invoice-${invoiceData.billNo}.pdf`);
-    } catch (error) {
-      console.error('Error generating PDF', error);
-      alert('Failed to generate PDF');
-    } finally {
-      setIsGeneratingPdf(false);
-    }
-  };
-
   const subTotal = calculateSubTotal(invoiceData.items);
 
   if (showPreviewScreen) {
@@ -191,13 +164,6 @@ export default function InvoiceForm() {
             >
               Print
             </button>
-            <button 
-              onClick={handleGeneratePdf}
-              disabled={isGeneratingPdf}
-              className="px-4 py-2 bg-accent text-white rounded-md hover:bg-blue-600 font-medium shadow-sm transition-colors disabled:opacity-50 text-sm"
-            >
-              {isGeneratingPdf ? 'Generating...' : 'Save PDF'}
-            </button>
           </div>
         </nav>
 
@@ -253,7 +219,76 @@ export default function InvoiceForm() {
                 </h2>
               </div>
               
-              <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 pb-2">
+              <div className="md:hidden space-y-4 mb-4">
+                {invoiceData.items.map((item, index) => {
+                  const amount = calculateLineAmount(item.rate, item.qty, item.discount);
+                  return (
+                    <div key={item.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 relative">
+                      <button 
+                        onClick={() => removeItem(index)}
+                        disabled={invoiceData.items.length === 1}
+                        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 disabled:opacity-30 p-1"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+                      </button>
+                      
+                      <div className="space-y-3 mt-2">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Date</label>
+                            <input 
+                              type="date" 
+                              value={item.date}
+                              onChange={e => handleItemChange(index, 'date', e.target.value)}
+                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm outline-none focus:border-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Product</label>
+                            {item.productId && !products.find(p => p.id.toString() === item.productId.toString()) ? (
+                              <div className="flex items-center justify-between w-full px-2 py-1.5 border border-gray-300 rounded bg-white text-sm">
+                                <span className="font-medium truncate">{item.productName}</span>
+                                <button onClick={() => handleItemChange(index, 'productId', '')} className="text-xs text-blue-500">Change</button>
+                              </div>
+                            ) : (
+                              <select 
+                                value={item.productId}
+                                onChange={e => handleItemChange(index, 'productId', e.target.value)}
+                                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm bg-white outline-none focus:border-blue-500"
+                              >
+                                {products.length === 0 ? <option value="" disabled>No products</option> : <option value="">Select...</option>}
+                                {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                              </select>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Rate</label>
+                            <input type="number" min="0" value={item.rate} onChange={e => handleItemChange(index, 'rate', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm outline-none focus:border-blue-500" placeholder="0" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">Qty</label>
+                            <input type="number" min="1" value={item.qty} onChange={e => handleItemChange(index, 'qty', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm outline-none focus:border-blue-500" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">N.Disc</label>
+                            <input type="number" min="0" value={item.discount} onChange={e => handleItemChange(index, 'discount', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm outline-none focus:border-blue-500" placeholder="0" />
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                          <span className="text-sm font-medium text-gray-500">Amount</span>
+                          <span className="text-base font-bold text-gray-900">{formatCurrency(amount)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="hidden md:block overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 pb-2">
                 <table className="w-full min-w-[800px] text-left border-collapse">
                   <thead>
                     <tr className="border-b-2 border-gray-200">
