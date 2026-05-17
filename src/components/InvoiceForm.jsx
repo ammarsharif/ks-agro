@@ -17,6 +17,7 @@ export default function InvoiceForm() {
   const [showProductManager, setShowProductManager] = useState(false);
   const [showConfirmNew, setShowConfirmNew] = useState(false);
   const [showPreviewScreen, setShowPreviewScreen] = useState(false);
+  const [previewScale, setPreviewScale] = useState(1);
   
   const printRef = useRef();
 
@@ -47,6 +48,24 @@ export default function InvoiceForm() {
   useEffect(() => {
     saveDraft(invoiceData);
   }, [invoiceData]);
+
+  // Handle mobile preview scaling
+  useEffect(() => {
+    if (!showPreviewScreen) return;
+    
+    const updateScale = () => {
+      if (window.innerWidth < 850) {
+        // 32px for padding (16px each side)
+        setPreviewScale((window.innerWidth - 32) / 800);
+      } else {
+        setPreviewScale(1);
+      }
+    };
+    
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [showPreviewScreen]);
 
   const handleNewInvoice = () => {
     setShowConfirmNew(true);
@@ -118,8 +137,15 @@ export default function InvoiceForm() {
             Close Preview
           </button>
         </div>
-        <div className="flex-1 overflow-auto p-4 flex justify-center items-start">
-          <div className="preview-scale-wrapper shadow-lg bg-white">
+        <div className="flex-1 overflow-auto p-4 flex justify-center items-start bg-gray-100">
+          <div 
+            className="shadow-2xl bg-white origin-top-left"
+            style={{ 
+              transform: `scale(${previewScale})`,
+              transformOrigin: 'top center',
+              marginBottom: `calc(-100% * (1 - ${previewScale}))` 
+            }}
+          >
             <InvoicePreview invoiceData={invoiceData} id="invoice-preview-screen" />
           </div>
         </div>
