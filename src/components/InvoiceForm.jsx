@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import { 
   getProducts, 
   saveDraft, 
@@ -125,17 +126,51 @@ export default function InvoiceForm() {
 
   const subTotal = calculateSubTotal(invoiceData.items);
 
+  const handleDownloadImage = async () => {
+    try {
+      const element = document.getElementById('invoice-preview-screen');
+      if (!element) return;
+      
+      const canvas = await html2canvas(element, {
+        scale: 2, // High resolution
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = imgData;
+      link.download = `KS-Agro-Invoice-${invoiceData.billNo}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error saving image:', error);
+      alert('Failed to save image.');
+    }
+  };
+
   if (showPreviewScreen) {
     return (
       <div className="min-h-screen bg-gray-100 flex flex-col">
         <div className="bg-white px-4 py-3 shadow-sm border-b border-gray-200 flex justify-between items-center sticky top-0 z-10">
           <h2 className="text-lg font-semibold">Invoice Preview</h2>
-          <button 
-            onClick={() => setShowPreviewScreen(false)}
-            className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md font-medium text-sm transition-colors"
-          >
-            Close Preview
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleDownloadImage}
+              className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-medium text-sm transition-colors flex items-center gap-2 shadow-sm"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Save Image
+            </button>
+            <button 
+              onClick={() => setShowPreviewScreen(false)}
+              className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md font-medium text-sm transition-colors"
+            >
+              Close
+            </button>
+          </div>
         </div>
         <div className="flex-1 overflow-auto p-4 flex justify-center items-start bg-gray-100">
           <div 
