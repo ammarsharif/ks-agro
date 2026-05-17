@@ -13,97 +13,111 @@ const InvoicePreview = forwardRef(({ invoiceData, id = "invoice-print-area" }, r
   } = invoiceData;
 
   const subTotal = calculateSubTotal(items);
+  const totalQty = items.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
 
   return (
     <div 
-      className="bg-white text-black w-full max-w-[800px] mx-auto box-border font-sans p-3 sm:p-8 text-[11px] sm:text-sm" 
+      className="bg-white text-black w-[800px] mx-auto box-border font-sans p-4" 
       ref={ref} 
       id={id}
     >
-      <div className="border-2 border-black">
+      <div className="border-[3px] border-black flex flex-col">
         {/* Header section */}
-        <div className="text-center py-3 sm:py-4 border-b-2 border-black">
-          <h1 className="text-lg sm:text-2xl font-bold uppercase tracking-wide">KS AGRO CHEMICALS & FERTILIZERS</h1>
-          <p className="text-[10px] sm:text-sm mt-1 font-medium">68/NP CHOWK SURELI RAHIM YAR KHAN</p>
+        <div className="text-center py-2 border-b-[3px] border-black">
+          <h1 className="text-[22px] font-bold uppercase tracking-wider">KS AGRO CHEMICALS & FERTILIZERS</h1>
+        </div>
+        <div className="text-center py-1 border-b-[3px] border-black">
+          <p className="text-[13px] font-bold uppercase tracking-wide">68/NP CHOWK SURELI RAHIM YAR KHAN</p>
         </div>
 
         {/* Info section */}
-        <div className="flex border-b-2 border-black">
-          <div className="w-1/2 p-2 space-y-1 sm:space-y-2 flex flex-col justify-center">
-            <p className="font-bold uppercase">BILL NO-{billNo}</p>
+        <div className="flex border-b-[3px] border-black text-[13px] font-bold uppercase">
+          <div className="w-1/2 px-2 py-1 border-r-[3px] border-black">
+            BILL NO-{billNo}
           </div>
-          <div className="w-1/2 p-2 space-y-1 sm:space-y-2 flex flex-col items-end">
-            <p className="font-bold uppercase">PRINT DATE: {printDate}</p>
-            <div className="flex">
-              <span className="font-bold mr-2">ACCOUNTS:</span>
-              <span className="uppercase">{customerName}</span>
-            </div>
+          <div className="w-1/2 px-2 py-1 text-right">
+            PRINT DATE: {printDate}
+          </div>
+        </div>
+        <div className="flex border-b-[3px] border-black text-[13px] font-bold uppercase">
+          <div className="px-2 py-1 border-r-[3px] border-black whitespace-nowrap">
+            ACCOUNTS:
+          </div>
+          <div className="flex-1 px-2 py-1 text-center">
+            {customerName}
           </div>
         </div>
 
         {/* Table section */}
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse text-[12px] font-bold uppercase">
           <thead>
-            <tr className="border-b-2 border-black">
-              <th className="p-1 sm:p-2 border-r-2 border-black text-center w-[15%]">DATE</th>
-              <th className="p-1 sm:p-2 border-r-2 border-black text-left">PRODUCTS</th>
-              <th className="p-1 sm:p-2 border-r-2 border-black text-right w-[15%]">RATE</th>
-              <th className="p-1 sm:p-2 border-r-2 border-black text-center w-[10%]">QTY</th>
-              <th className="p-1 sm:p-2 border-r-2 border-black text-right w-[15%]">N.DISC</th>
-              <th className="p-1 sm:p-2 text-right w-[18%]">AMOUNT</th>
+            <tr className="border-b-[3px] border-black">
+              <th className="py-2 px-1 border-r-[3px] border-black text-center w-[14%]">DATE</th>
+              <th className="py-2 px-1 border-r-[3px] border-black text-center w-[30%]">PRODUCTS</th>
+              <th className="py-2 px-1 border-r-[3px] border-black text-center w-[14%]">RATE</th>
+              <th className="py-2 px-1 border-r-[3px] border-black text-center w-[10%]">QTY</th>
+              <th className="py-2 px-1 border-r-[3px] border-black text-center w-[14%]">INV DISC</th>
+              <th className="py-2 px-1 text-center w-[18%]">AMOUNT</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, index) => {
               const amount = calculateLineAmount(item.rate, item.qty, item.discount);
               return (
-                <tr key={index} className="border-b border-gray-300">
-                  <td className="p-1 sm:p-2 border-r-2 border-black text-center">{item.date}</td>
-                  <td className="p-1 sm:p-2 border-r-2 border-black font-medium uppercase truncate max-w-[80px] sm:max-w-none">{item.productName}</td>
-                  <td className="p-1 sm:p-2 border-r-2 border-black text-right">{item.rate || 0}</td>
-                  <td className="p-1 sm:p-2 border-r-2 border-black text-center">{item.qty || 0}</td>
-                  <td className="p-1 sm:p-2 border-r-2 border-black text-right">{item.discount || 0}</td>
-                  <td className="p-1 sm:p-2 text-right font-semibold">{formatCurrency(amount)}</td>
+                <tr key={index} className="border-b-2 border-black leading-none">
+                  <td className="py-2 px-1 border-r-[3px] border-black text-center h-[30px]">{item.date}</td>
+                  <td className="py-2 px-1 border-r-[3px] border-black text-center">{item.productName}</td>
+                  <td className="py-2 px-1 border-r-[3px] border-black text-center">{item.rate || 0}</td>
+                  <td className="py-2 px-1 border-r-[3px] border-black text-center">{item.qty || 0}</td>
+                  <td className="py-2 px-1 border-r-[3px] border-black text-center">{item.discount || ''}</td>
+                  <td className="py-2 px-1 text-center">{amount > 0 ? formatCurrency(amount) : 0}</td>
                 </tr>
               );
             })}
             {/* Fill empty space if items are few */}
-            {items.length < 10 && Array.from({ length: 10 - items.length }).map((_, i) => (
-              <tr key={`empty-${i}`} className={i === 9 - items.length ? "" : "border-b border-gray-300"}>
-                <td className="p-2 sm:p-4 border-r-2 border-black"></td>
-                <td className="p-2 sm:p-4 border-r-2 border-black"></td>
-                <td className="p-2 sm:p-4 border-r-2 border-black"></td>
-                <td className="p-2 sm:p-4 border-r-2 border-black"></td>
-                <td className="p-2 sm:p-4 border-r-2 border-black"></td>
-                <td className="p-2 sm:p-4"></td>
+            {items.length < 12 && Array.from({ length: 12 - items.length }).map((_, i) => (
+              <tr key={`empty-${i}`} className="border-b-2 border-black leading-none">
+                <td className="py-2 px-1 border-r-[3px] border-black h-[30px]"></td>
+                <td className="py-2 px-1 border-r-[3px] border-black"></td>
+                <td className="py-2 px-1 border-r-[3px] border-black"></td>
+                <td className="py-2 px-1 border-r-[3px] border-black"></td>
+                <td className="py-2 px-1 border-r-[3px] border-black"></td>
+                <td className="py-2 px-1"></td>
               </tr>
             ))}
           </tbody>
         </table>
 
         {/* Footer Totals */}
-        <div className="border-t-2 border-black p-2 flex justify-end">
-          <div className="text-right text-base sm:text-lg font-bold flex gap-4 items-center">
-            <span>SAB TOTAL:</span>
-            <span className="w-20 sm:w-32 inline-block text-right">{formatCurrency(subTotal)}</span>
+        <div className="flex border-b-[3px] border-black text-[13px] font-bold uppercase">
+          <div className="w-[44%] py-2 border-r-[3px] border-black text-center">
+            SAB TOTAL
+          </div>
+          <div className="w-[14%] border-r-[3px] border-black"></div>
+          <div className="w-[10%] py-2 border-r-[3px] border-black text-center">
+            {totalQty}
+          </div>
+          <div className="w-[14%] border-r-[3px] border-black"></div>
+          <div className="w-[18%] py-2 text-center">
+            {formatCurrency(subTotal)}
           </div>
         </div>
 
         {/* Signatures */}
-        <div className="border-t-2 border-black flex">
-          <div className="w-1/3 p-2 border-r-2 border-black">
-            <p className="font-bold mb-4">PREPARED BY</p>
-            <p className="uppercase mt-4">{preparedBy}</p>
+        <div className="flex border-b-[3px] border-black text-[12px] font-bold uppercase min-h-[60px]">
+          <div className="w-[33.33%] border-r-[3px] border-black flex justify-center pt-2">
+            PREPARED BY
           </div>
-          <div className="w-1/3 p-2 border-r-2 border-black">
-            <p className="font-bold mb-4">APPROVED BY</p>
-            <p className="uppercase mt-4">{approvedBy}</p>
+          <div className="w-[33.33%] border-r-[3px] border-black flex justify-center pt-2">
+            APPROVED BY
           </div>
-          <div className="w-1/3 p-2">
-            <p className="font-bold mb-4">RECEIVED BY</p>
-            <p className="uppercase mt-4">{receivedBy}</p>
+          <div className="w-[33.33%] flex justify-center pt-2">
+            RECEIVED BY
           </div>
         </div>
+
+        {/* Bottom Empty Box */}
+        <div className="h-[30px]"></div>
       </div>
     </div>
   );

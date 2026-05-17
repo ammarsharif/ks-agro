@@ -37,3 +37,9 @@
     display: none !important;
   }
 }
+
+@media screen and (max-width: 850px) {
+  .preview-scale-wrapper {
+    zoom: calc((100vw - 32px) / 800);
+  }
+}

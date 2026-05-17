@@ -119,8 +119,7 @@ export default function InvoiceForm() {
           </button>
         </div>
         <div className="flex-1 overflow-auto p-4 flex justify-center items-start">
-          {/* A scale trick for mobile or just allow horizontal scroll */}
-          <div className="shadow-lg bg-white overflow-x-auto max-w-full">
+          <div className="preview-scale-wrapper shadow-lg bg-white">
             <InvoicePreview invoiceData={invoiceData} id="invoice-preview-screen" />
           </div>
         </div>
