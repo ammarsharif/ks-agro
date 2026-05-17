@@ -1,16 +1,62 @@
-# React + Vite
+# KS Agro Chemicals & Fertilizers - Invoice Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek, responsive, client-side web application built with React and Vite for generating and managing invoices. Tailored specifically for KS Agro Chemicals & Fertilizers, this tool ensures accurate local data persistence, custom A4-scaled PDF generation, and a professional user interface.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Instant Invoice Generation**: Dynamically add, remove, and manage invoice line items.
+- **Product Management (CRUD)**: Manage your inventory directly within the app. Products are saved to your browser so you don't have to re-enter them.
+- **Local Persistence**: Draft invoices and product catalogs are seamlessly saved to `localStorage`. You won't lose your work if you accidentally refresh the page.
+- **Randomized Bill Numbers**: Automatically generates professional 4-digit randomized bill numbers for every new invoice.
+- **High-Quality PDF Exports**: Integrated with `jsPDF` and `html2canvas` to instantly convert the A4-scaled invoice into a downloadable PDF document.
+- **Mobile-Responsive**: Features an independent "Preview" mode so you can view and screenshot your invoice flawlessly from a mobile device.
+- **No Backend Required**: 100% frontend. Secure, lightweight, and deployable entirely on edge networks or static hosting.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS v3](https://tailwindcss.com/)
+- **PDF Generation**: `jspdf` & `html2canvas`
+- **Fonts**: Google Fonts (Inter)
 
-## Expanding the ESLint configuration
+## 📦 Local Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Run the Development Server**
+   ```bash
+   npm run dev
+   ```
+   *The app will be available at `http://localhost:5173`*
+
+3. **Build for Production**
+   ```bash
+   npm run build
+   ```
+
+4. **Preview Production Build**
+   ```bash
+   npm run preview
+   ```
+
+## 🌐 Deployment (Vercel)
+
+This project includes a `vercel.json` configuration file, making it ready for instant deployment on Vercel.
+
+**Option 1: Vercel CLI**
+```bash
+npm i -g vercel
+vercel
+```
+
+**Option 2: GitHub Integration**
+1. Push this repository to GitHub.
+2. Log in to [Vercel](https://vercel.com/new).
+3. Import the repository. Vercel will automatically detect the Vite framework and handle the build.
+
+## 📄 License
+
+This project is proprietary software developed for internal use by KS Agro Chemicals.
