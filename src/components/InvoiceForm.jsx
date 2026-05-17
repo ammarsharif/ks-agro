@@ -276,12 +276,11 @@ export default function InvoiceForm() {
               </div>
             </div>
 
-            {/* Line Items */}
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                   <span className="w-8 h-8 rounded bg-blue-100 text-accent flex items-center justify-center text-sm">2</span>
-                  Line Items
+                  Product Details
                 </h2>
               </div>
               
@@ -466,7 +465,7 @@ export default function InvoiceForm() {
                   className="flex items-center gap-2 text-accent font-medium hover:text-blue-700 hover:bg-blue-50 px-3 py-2 rounded-md transition-colors text-sm border border-transparent hover:border-blue-100"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  Add Row
+                  Add Product
                 </button>
                 <div className="text-right flex items-center bg-gray-50 px-4 py-2 rounded-md border border-gray-200">
                   <span className="text-gray-500 font-medium mr-4 text-sm tracking-wider">SAB TOTAL</span>

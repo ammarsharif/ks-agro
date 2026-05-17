@@ -4,7 +4,7 @@ A sleek, responsive, client-side web application built with React and Vite for g
 
 ## 🚀 Features
 
-- **Instant Invoice Generation**: Dynamically add, remove, and manage invoice line items.
+- **Instant Invoice Generation**: Dynamically add, remove, and manage invoice products.
 - **Product Management (CRUD)**: Manage your inventory directly within the app. Products are saved to your browser so you don't have to re-enter them.
 - **Local Persistence**: Draft invoices and product catalogs are seamlessly saved to `localStorage`. You won't lose your work if you accidentally refresh the page.
 - **Randomized Bill Numbers**: Automatically generates professional 4-digit randomized bill numbers for every new invoice.
