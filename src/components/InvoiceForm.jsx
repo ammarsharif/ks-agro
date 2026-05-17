@@ -128,17 +128,18 @@ export default function InvoiceForm() {
 
   const handleDownloadImage = async () => {
     try {
-      const element = document.getElementById('invoice-preview-screen');
+      // Target the unscaled, hidden capture area instead of the scaled preview screen
+      const element = document.getElementById('invoice-capture-area');
       if (!element) return;
       
       const canvas = await html2canvas(element, {
-        scale: 2, // High resolution
+        scale: 3, // Ultra-high resolution (3x the 800px width = 2400px wide)
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff'
       });
       
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/png', 1.0);
       const link = document.createElement('a');
       link.href = imgData;
       link.download = `KS-Agro-Invoice-${invoiceData.billNo}.png`;
@@ -154,6 +155,11 @@ export default function InvoiceForm() {
   if (showPreviewScreen) {
     return (
       <div className="min-h-screen bg-gray-100 flex flex-col">
+        {/* Hidden unscaled instance specifically for ultra-crisp html2canvas capture */}
+        <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', zIndex: -1 }}>
+          <InvoicePreview invoiceData={invoiceData} id="invoice-capture-area" />
+        </div>
+
         <div className="bg-white px-4 py-3 shadow-sm border-b border-gray-200 flex justify-between items-center sticky top-0 z-10">
           <h2 className="text-lg font-semibold">Invoice Preview</h2>
           <div className="flex gap-2">
