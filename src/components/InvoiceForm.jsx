@@ -260,7 +260,7 @@ export default function InvoiceForm() {
               onClick={() => setShowPreviewScreen(true)}
               className="px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-md hover:bg-gray-50 font-medium transition-colors text-sm"
             >
-              Preview
+              Show Invoice
             </button>
             <button
               onClick={() => window.print()}
