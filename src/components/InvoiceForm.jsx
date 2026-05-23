@@ -361,7 +361,7 @@ export default function InvoiceForm() {
                       </div>
 
                       <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col gap-3">
                           <div>
                             <label className="block text-xs font-medium text-gray-500 mb-1">Date</label>
                             <input
