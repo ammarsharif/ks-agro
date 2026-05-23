@@ -142,13 +142,6 @@ export default function InvoiceForm() {
     }));
   };
 
-  const addReturnItem = () => {
-    setInvoiceData(prev => ({
-      ...prev,
-      items: [...prev.items, blankItem('credit')]
-    }));
-  };
-
   const removeItem = (index) => {
     if (invoiceData.items.length === 1) return;
     setInvoiceData(prev => ({
@@ -577,13 +570,6 @@ export default function InvoiceForm() {
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Add Product
-                  </button>
-                  <button
-                    onClick={addReturnItem}
-                    className="flex items-center gap-1.5 text-red-600 font-medium hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-md transition-colors text-sm border border-transparent hover:border-red-100"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14l-4-4 4-4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/></svg>
-                    Add Return
                   </button>
                 </div>
 

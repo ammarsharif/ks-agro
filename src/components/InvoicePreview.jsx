@@ -123,9 +123,18 @@ const InvoicePreview = forwardRef(({ invoiceData, id = "invoice-print-area" }, r
 
         {/* Signatures */}
         <div className="flex border-b-[3px] border-black text-[12px] font-bold uppercase min-h-[60px]">
-          <div className="w-[33.33%] border-r-[3px] border-black flex justify-center pt-2">PREPARED BY</div>
-          <div className="w-[33.33%] border-r-[3px] border-black flex justify-center pt-2">APPROVED BY</div>
-          <div className="w-[33.33%] flex justify-center pt-2">RECEIVED BY</div>
+          <div className="w-[33.33%] border-r-[3px] border-black flex flex-col items-center pt-2 px-1 gap-1">
+            <span>PREPARED BY</span>
+            {preparedBy && <span className="text-[11px] font-bold">{preparedBy}</span>}
+          </div>
+          <div className="w-[33.33%] border-r-[3px] border-black flex flex-col items-center pt-2 px-1 gap-1">
+            <span>APPROVED BY</span>
+            {approvedBy && <span className="text-[11px] font-bold">{approvedBy}</span>}
+          </div>
+          <div className="w-[33.33%] flex flex-col items-center pt-2 px-1 gap-1">
+            <span>RECEIVED BY</span>
+            {receivedBy && <span className="text-[11px] font-bold">{receivedBy}</span>}
+          </div>
         </div>
 
         {/* Bottom Empty Box */}
