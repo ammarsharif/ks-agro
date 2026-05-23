@@ -11,6 +11,7 @@ export const calculateSubTotal = (items) => {
   }, 0);
 };
 
+
 export const formatCurrency = (amount) => {
   const val = parseFloat(amount) || 0;
   return val.toLocaleString('en-PK', {
