@@ -24,9 +24,9 @@ export default function InvoiceForm() {
 
   const getToday = () => new Date().toISOString().split('T')[0];
 
-  const blankItem = (type = 'debit') => ({
+  const blankItem = (type = 'debit', date = getToday()) => ({
     id: Date.now(),
-    date: getToday(),
+    date,
     productId: '',
     productName: '',
     rate: '',
@@ -111,6 +111,21 @@ export default function InvoiceForm() {
   };
 
   const handleChange = (field, value) => {
+    if (field === 'printDate') {
+      setInvoiceData(prev => ({
+        ...prev,
+        printDate: value,
+        // Items that were following the print date (or that would now be in
+        // the future relative to it) snap to the new print date. Items the
+        // user manually set to an earlier date are left alone.
+        items: prev.items.map(item =>
+          (item.date === prev.printDate || item.date > value)
+            ? { ...item, date: value }
+            : item
+        )
+      }));
+      return;
+    }
     setInvoiceData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -128,6 +143,9 @@ export default function InvoiceForm() {
         item.productName = '';
         item.rate = 0;
       }
+    } else if (field === 'date') {
+      // Manual edits are allowed, but never later than the print date.
+      item.date = value > invoiceData.printDate ? invoiceData.printDate : value;
     } else {
       item[field] = value;
     }
@@ -138,14 +156,14 @@ export default function InvoiceForm() {
   const addItem = () => {
     setInvoiceData(prev => ({
       ...prev,
-      items: [...prev.items, blankItem('debit')]
+      items: [...prev.items, blankItem('debit', prev.printDate)]
     }));
   };
 
   const addReturnItem = () => {
     setInvoiceData(prev => ({
       ...prev,
-      items: [...prev.items, blankItem('credit')]
+      items: [...prev.items, blankItem('credit', prev.printDate)]
     }));
   };
 
@@ -367,6 +385,7 @@ export default function InvoiceForm() {
                             <input
                               type="date"
                               value={item.date}
+                              max={invoiceData.printDate}
                               onChange={e => handleItemChange(index, 'date', e.target.value)}
                               className={`w-full px-2 py-1.5 border rounded text-sm outline-none ${isCredit ? 'border-red-200 focus:border-red-400' : 'border-gray-300 focus:border-blue-500'}`}
                             />
@@ -457,6 +476,7 @@ export default function InvoiceForm() {
                               <input
                                 type="date"
                                 value={item.date}
+                                max={invoiceData.printDate}
                                 onChange={e => handleItemChange(index, 'date', e.target.value)}
                                 className={`w-full px-2 py-2 border rounded-md outline-none text-sm ${
                                   isCredit
