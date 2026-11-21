@@ -43,3 +43,11 @@
     zoom: calc((100vw - 32px) / 800);
   }
 }
+
+@media print {
+  #invoice-print-area.bill-sheet {
+    width: 100% !important;
+    min-height: 265mm !important;
+    box-sizing: border-box;
+  }
+}

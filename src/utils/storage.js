@@ -68,3 +68,47 @@ export const getDraft = () => {
 export const clearDraft = () => {
   localStorage.removeItem("ks_draft_invoice");
 };
+
+/* ───────── Dealers (used by Sale Bill / Delivery Challan) ───────── */
+
+const readJSON = (key, fallback) => {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const normName = (s) => String(s || '').trim().toUpperCase();
+
+export const getDealers = () => readJSON("ks_dealers", []);
+
+// Saves the dealer (or updates its Account ID / D.C. No if the name already exists)
+export const upsertDealer = ({ name, accountId, dcNo }) => {
+  const key = normName(name);
+  const dealers = getDealers();
+  if (!key) return dealers;
+  const entry = { name: key, accountId: String(accountId || '').trim(), dcNo: String(dcNo || '').trim() };
+  const idx = dealers.findIndex((d) => normName(d.name) === key);
+  if (idx !== -1) dealers[idx] = { ...dealers[idx], ...entry };
+  else dealers.push({ id: Date.now(), ...entry });
+  localStorage.setItem("ks_dealers", JSON.stringify(dealers));
+  return dealers;
+};
+
+export const deleteDealer = (name) => {
+  const dealers = getDealers().filter((d) => normName(d.name) !== normName(name));
+  localStorage.setItem("ks_dealers", JSON.stringify(dealers));
+  return dealers;
+};
+
+/* ───────── Per-document drafts (variant = 'sale' | 'challan') ───────── */
+
+export const getBillDraft = (variant) => readJSON(`ks_draft_${variant}`, null);
+export const saveBillDraft = (variant, data) =>
+  localStorage.setItem(`ks_draft_${variant}`, JSON.stringify(data));
+export const clearBillDraft = (variant) => localStorage.removeItem(`ks_draft_${variant}`);
+
+export const getActiveTab = () => localStorage.getItem("ks_active_tab");
+export const saveActiveTab = (tab) => localStorage.setItem("ks_active_tab", tab);
